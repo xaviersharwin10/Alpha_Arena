@@ -160,7 +160,7 @@ const Profile: React.FC = () => {
                 </div>
               </div>
               
-              {/* Main Stats Grid */}
+              {/* Main Stats Grid  */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="text-center">
                   <p className="text-3xl font-black text-white font-mono">{userStats.totalDuels}</p>
