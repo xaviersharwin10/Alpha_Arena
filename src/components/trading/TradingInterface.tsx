@@ -4,9 +4,10 @@ import { SwapModal } from './SwapModal';
 
 interface TradingInterfaceProps {
   duel: any;
+  onOpenSwapModal: () => void;
 }
 
-export const TradingInterface: React.FC<TradingInterfaceProps> = ({ duel }) => {
+export const TradingInterface: React.FC<TradingInterfaceProps> = ({ duel, onOpenSwapModal }) => {
   const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
 
   return (
@@ -22,7 +23,7 @@ export const TradingInterface: React.FC<TradingInterfaceProps> = ({ duel }) => {
       {/* Quick Actions */}
       <div className="grid md:grid-cols-3 gap-4 mb-6">
         <button
-          onClick={() => setIsSwapModalOpen(true)}
+          onClick={onOpenSwapModal}
           className="p-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-600/30 rounded-lg hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-300 group"
         >
           <div className="flex items-center space-x-3">
