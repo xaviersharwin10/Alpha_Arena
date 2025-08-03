@@ -53,7 +53,7 @@ export const DuelDetailsPage: React.FC = () => {
             <>
             <TradingInterface duel={duel}
             onOpenSwapModal={() => setIsSwapModalOpen(true)}
-             />
+            />
               <SwapModal
             isOpen={isSwapModalOpen}
             onClose={() => setIsSwapModalOpen(false)}

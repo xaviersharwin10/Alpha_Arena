@@ -87,11 +87,11 @@ export const DuelStats: React.FC<DuelStatsProps> = ({ duel }) => {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-red-400">Opponent</h3>
             <div className="text-xs text-gray-400">
-              {duel.opponent ? `${duel.opponent.slice(0, 6)}...${duel.opponent.slice(-4)}` : 'Waiting...'}
+              {duel.opponent && duel.status === 'ACTIVE'? `${duel.opponent.slice(0, 6)}...${duel.opponent.slice(-4)}` : 'Waiting...'}
             </div>
           </div>
           
-          {duel.opponent ? (
+          {duel.opponent && duel.status === 'ACTIVE'? (
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-400">Portfolio Value:</span>
