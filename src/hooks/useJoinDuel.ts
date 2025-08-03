@@ -80,7 +80,7 @@ export const useJoinDuel = () => {
 
   return useMutation({
     mutationFn: async ({ duelId, duel }: { duelId: number; duel: any }) => {
-      const contractAddress = process.env.CONTRACT_ADDRESS;
+      const contractAddress = "0x0b67Ef30c9F6E937a4a2c06EeE3e6F78f2668c7A";
       const tokenAddress = duel.tokenAddress as `0x${string}`;
       const wagerAmount = parseUnits(duel.wagerAmount, 18);
 

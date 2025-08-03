@@ -137,6 +137,9 @@ export const DuelStats: React.FC<DuelStatsProps> = ({ duel }) => {
         let opponentAmount = 0;
         if (duel.opponent) {
           opponentAmount = await fetchPortfolioValue(duel.opponent, thisRequestId);
+          if(duel.opponent.startsWith("0x0000000000")){
+            opponentAmount = 0;
+          }
         }
         
         if (!isMounted || thisRequestId !== currentRequestId) {
@@ -247,8 +250,8 @@ export const DuelStats: React.FC<DuelStatsProps> = ({ duel }) => {
 
       <div className="bg-gray-900/50 rounded-lg p-4 mb-6">
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-white text-lg">Portfolio Value Over Time</h3>
-          <span className="text-xs text-gray-400">
+          <h2 className="text-xl font-bold text-white">Portfolio Value Over Time</h2>
+          <span className="text-gray-400 text-sm">
             Data points: {chartData.length}
           </span>
         </div>
@@ -270,7 +273,6 @@ export const DuelStats: React.FC<DuelStatsProps> = ({ duel }) => {
               />
               <Tooltip 
                 contentStyle={{
-                  backgroundColor: '#1f2937',
                   border: '1px solid #374151',
                   borderRadius: '8px'
                 }}
@@ -280,17 +282,17 @@ export const DuelStats: React.FC<DuelStatsProps> = ({ duel }) => {
               <Line
                 type="monotone"
                 dataKey="creator"
-                stroke="#3b82f6"
+                stroke="oklch(70.7% 0.165 254.624)"
                 strokeWidth={2}
-                dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+                dot={{ fill: 'oklch(70.7% 0.165 254.624)', strokeWidth: 2, r: 4 }}
                 name="Creator"
               />
               <Line
                 type="monotone"
                 dataKey="opponent"
-                stroke="#ef4444"
+                stroke="oklch(70.4% 0.191 22.216)"
                 strokeWidth={2}
-                dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
+                dot={{ fill: 'oklch(70.4% 0.191 22.216)', strokeWidth: 2, r: 4 }}
                 name="Opponent"
               />
             </LineChart>
@@ -363,7 +365,7 @@ export const DuelStats: React.FC<DuelStatsProps> = ({ duel }) => {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-red-400">Opponent</h3>
             <div className="text-xs text-gray-400">
-               {duel.opponent && duel.status === 'ACTIVE'? `${duel.opponent.slice(0, 6)}...${duel.opponent.slice(-4)}` : 'Waiting...'}
+              {duel.opponent && duel.status === 'ACTIVE'? `${duel.opponent.slice(0, 6)}...${duel.opponent.slice(-4)}` : 'Waiting...'}
             </div>
           </div>
 
