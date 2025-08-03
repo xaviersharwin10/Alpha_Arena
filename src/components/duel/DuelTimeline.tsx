@@ -16,7 +16,7 @@ export const DuelTimeline: React.FC<DuelTimelineProps> = ({ duel }) => {
       icon: Flag,
       color: 'text-blue-400'
     },
-    ...(duel.opponent && duel.status === 'ACTIVE' ? [{
+    ...(duel.opponent && duel.status === 'ACTIVE' || duel.status === 'RESOLVED'? [{
       id: 2,
       type: 'joined',
       title: 'Opponent Joined',
