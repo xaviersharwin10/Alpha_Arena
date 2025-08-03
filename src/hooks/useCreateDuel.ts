@@ -2,7 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
+import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
+// Contract ABI for createDuel function
 const DUEL_ABI = [
   {
     "inputs": [
@@ -17,6 +21,30 @@ const DUEL_ABI = [
   }
 ];
 
+// NEW: ERC20 ABI for token approval
+const ERC20_ABI = [
+  {
+    "inputs": [
+      {"internalType": "address", "name": "spender", "type": "address"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "approve",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "address", "name": "owner", "type": "address"},
+      {"internalType": "address", "name": "spender", "type": "address"}
+    ],
+    "name": "allowance",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
+
 interface CreateDuelParams {
   tokenAddress: string;
   amount: string;
@@ -27,40 +55,71 @@ export const useCreateDuel = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   
-  // NEW: Frontend transaction signing
-  const { writeContract, data: hash } = useWriteContract();
-  const { isLoading: isConfirming } = useWaitForTransactionReceipt({
-    hash,
+  // NEW: Separate hooks for approval and create transactions
+  const { writeContract: approveToken, data: approveHash } = useWriteContract();
+  const { writeContract: createDuel, data: createHash } = useWriteContract();
+  
+  const { isLoading: isApproving } = useWaitForTransactionReceipt({
+    hash: approveHash,
+  });
+  
+  const { isLoading: isCreating } = useWaitForTransactionReceipt({
+    hash: createHash,
   });
 
   return useMutation({
     mutationFn: async (params: CreateDuelParams) => {
-      // NEW: User signs transaction via MetaMask
-      const contractAddress = process.env.CONTRACT_ADDRESS ;
-      
-      await writeContract({
+      const contractAddress = "0xfe0C18fA760C3E743A86Bf765eFf7484c8379b50";
+      const tokenAddress = params.tokenAddress as `0x${string}`;
+      const wagerAmount = parseUnits(params.amount, 18);
+
+      console.log('Creating duel:', { tokenAddress, wagerAmount: wagerAmount.toString(), duration: params.duration });
+
+      // NEW: Step 1 - Approve token spending
+      console.log('Step 1: Approving token...');
+      await approveToken({
+        address: tokenAddress,
+        abi: ERC20_ABI,
+        functionName: 'approve',
+        args: [contractAddress, wagerAmount],
+      });
+
+      // NEW: Wait for approval to complete
+      if (approveHash) {
+        console.log('Waiting for approval confirmation...');
+        // Wait a bit for the approval to be mined
+        await new Promise(resolve => setTimeout(resolve, 3000));
+      }
+
+      // NEW: Step 2 - Create the duel
+      console.log('Step 2: Creating duel...');
+      await createDuel({
         address: contractAddress,
         abi: DUEL_ABI,
         functionName: 'createDuel',
         args: [
-          params.tokenAddress as `0x${string}`,
-          parseUnits(params.amount, 18),
+          tokenAddress,
+          wagerAmount,
           BigInt(params.duration)
         ],
       });
-      
-      // NEW: Return transaction hash for tracking
-      return { hash };
+
+      return { approveHash, createHash };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Create duel success:', data);
       // Invalidate duels query to refresh the list
       queryClient.invalidateQueries({ queryKey: ['duels'] });
       
-      // NEW: Navigate to explorer to see the new duel
+      // Navigate to explorer to see the new duel
       navigate('/explorer');
     },
     onError: (error) => {
       console.error('Failed to create duel:', error);
     },
+    // NEW: Add loading state that covers both approval and create
+    meta: {
+      isLoading: isApproving || isCreating
+    }
   });
 };
