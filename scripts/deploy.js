@@ -5,7 +5,7 @@ async function main() {
 
   // // Get the deployer account
   // const [deployer] = await hre.ethers.getSigners();
-  const deployAddress = process.env.deployAddress || "0"
+  const deployAddress = process.env.deployAddress || "0xB8194BD8F2f76bBd18aA762D376fAD31d01303Da"
   console.log("Deploying with account:",deployAddress);
   
   const balance = await hre.ethers.provider.getBalance(deployAddress);
