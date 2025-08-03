@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Sword, Trophy, Plus, Search, BarChart3 } from 'lucide-react';
+import AlphaIcon from '../../assets/FinalLogo.png'
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -19,9 +20,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="p-2 bg-gradient-to-r from-red-600 to-orange-500 rounded-lg group-hover:from-red-500 group-hover:to-orange-400 transition-all duration-300">
-              <Trophy className="w-6 h-6 text-white" />
-            </div>
+              <img src={AlphaIcon} alt="Alpha Icon" className="w-14 h-14" />
             <div className="flex flex-col">
               <span className="text-xl font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
                 Alpha Arena
