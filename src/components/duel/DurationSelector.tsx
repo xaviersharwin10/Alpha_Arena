@@ -6,8 +6,8 @@ interface DurationSelectorProps {
 }
 
 const durationOptions = [
+  { label: '2 Minutes', value: 120 },
   { label: '1 Hour', value: 3600 },
-  { label: '4 Hours', value: 14400 },
   { label: '12 Hours', value: 43200 },
   { label: '24 Hours', value: 86400 },
   { label: '3 Days', value: 259200 },
