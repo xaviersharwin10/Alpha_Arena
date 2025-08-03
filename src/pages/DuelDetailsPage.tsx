@@ -1,16 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useParams } from 'react-router-dom';
 import { useDuel } from '../hooks/useDuel';
 import { DuelHeader } from '../components/duel/DuelHeader';
 import { DuelStats } from '../components/duel/DuelStats';
+import { JoinDuelButton } from '../components/duel/JoinDuelButton';
 import { TradingInterface } from '../components/trading/TradingInterface';
 import { DuelTimeline } from '../components/duel/DuelTimeline';
+import { SwapModal } from '../components/trading/SwapModal';
 
 export const DuelDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const duelId = parseInt(id || '0');
   const { data: duel, isLoading, error } = useDuel(duelId);
-
+  const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -36,12 +38,27 @@ export const DuelDetailsPage: React.FC = () => {
     <div className="space-y-8">
       <DuelHeader duel={duel} />
       
+      {/* NEW: Join Duel Button for open duels */}
+      {duel.status === 'OPEN' && (
+        <div className="max-w-md mx-auto">
+          <JoinDuelButton duelId={duel.id} />
+        </div>
+      )}
+      
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           <DuelStats duel={duel} />
           
           {duel.status === 'ACTIVE' && (
-            <TradingInterface duel={duel} />
+            <>
+            <TradingInterface duel={duel}
+            onOpenSwapModal={() => setIsSwapModalOpen(true)}
+             />
+              <SwapModal
+            isOpen={isSwapModalOpen}
+            onClose={() => setIsSwapModalOpen(false)}
+          />
+          </>
           )}
         </div>
         
