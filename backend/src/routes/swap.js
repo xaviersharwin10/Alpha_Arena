@@ -3,6 +3,54 @@ import { oneInchService } from '../services/oneInch.js';
 
 const router = express.Router();
 
+
+// NEW: Check token allowance
+router.get('/allowance', async (req, res, next) => {
+  try {
+    const { tokenAddress, walletAddress } = req.query;
+    
+    if (!tokenAddress || !walletAddress) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required parameters: tokenAddress, walletAddress'
+      });
+    }
+
+    const allowance = await oneInchService.checkAllowance({
+      tokenAddress,
+      walletAddress
+    });
+
+    res.json({ success: true, data: allowance });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// NEW: Get approval transaction data
+router.get('/approve', async (req, res, next) => {
+  try {
+    console.log("atleast came here")
+    const { tokenAddress, amount } = req.query;
+    
+    if (!tokenAddress || !amount) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required parameters: tokenAddress, amount'
+      });
+    }
+
+    const approvalTx = await oneInchService.getApprovalTransaction({
+      tokenAddress,
+      amount
+    });
+
+    res.json({ success: true, data: approvalTx });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Get quote for swap
 router.get('/quote', async (req, res, next) => {
   try {
@@ -33,7 +81,7 @@ router.get('/transaction', async (req, res, next) => {
     const { 
       src, 
       dst, 
-      amount,
+      amount, 
       from,
       slippage = 1
     } = req.query;

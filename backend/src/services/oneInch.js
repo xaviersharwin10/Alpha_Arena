@@ -16,6 +16,41 @@ class OneInchService {
     });
   }
 
+  async checkAllowance({ tokenAddress, walletAddress }) {
+    console.log(tokenAddress, walletAddress)
+    try {
+      const response = await this.client.get(`/swap/v6.1/${this.chainId}/approve/allowance`, {
+        params: {
+          tokenAddress,
+          walletAddress
+        }
+      });
+      console.log("Check allowance call", response.data)
+      return response.data;
+    } catch (error) {
+      console.error('1inch allowance check error:', error.response?.data || error.message);
+      throw new Error(`Failed to check allowance: ${error.response?.data?.description || error.message}`);
+    }
+  }
+
+    async getApprovalTransaction({ tokenAddress, amount }) {
+      console.log("called service layer", tokenAddress, amount)
+    try {
+      const response = await this.client.get(`/swap/v6.1/${this.chainId}/approve/transaction`, {
+        params: {
+          tokenAddress,
+          amount
+        }
+      });
+      console.log("Approval Transaction response", response.data);
+      return response.data;
+    } catch (error) {
+      console.error('1inch approval transaction error:', error.response?.data || error.message);
+      throw new Error(`Failed to get approval transaction: ${error.response?.data?.description || error.message}`);
+    }
+  }
+
+
   async getSwapQuote({ src, dst, amount }) {
     try {
       const response = await this.client.get(`/swap/v6.1/${this.chainId}/quote`, {
