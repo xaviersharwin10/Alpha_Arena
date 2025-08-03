@@ -46,14 +46,14 @@ export const JoinDuelButton: React.FC<JoinDuelButtonProps> = ({ duelId }) => {
   return (
     <button
       onClick={handleJoinDuel}
-      disabled={joinDuel.isPending || joinDuel.meta?.isLoading}
+      disabled={joinDuel.isPending}
       className={`w-full py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center space-x-2 ${
         joinDuel.isSuccess
           ? 'bg-green-600/20 border border-green-600/30 text-green-400'
           : 'bg-gradient-to-r from-red-600/20 to-orange-500/20 border border-red-600/30 text-red-400 hover:from-red-600/30 hover:to-orange-500/30 hover:border-red-500/50'
       }`}
     >
-      {joinDuel.isPending || joinDuel.meta?.isLoading ? (
+      {joinDuel.isPending ? (
         <>
           <Loader2 className="w-4 h-4 animate-spin" />
           <span>Approving & Joining...</span>
