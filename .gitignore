@@ -25,3 +25,6 @@ dist-ssr
 
 /artifacts/@openzeppelin/contracts
 /artifacts/build-info
+
+.env
+/backend/.env
