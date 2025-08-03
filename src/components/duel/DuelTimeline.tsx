@@ -12,7 +12,7 @@ export const DuelTimeline: React.FC<DuelTimelineProps> = ({ duel }) => {
       type: 'created',
       title: 'Duel Created',
       description: `Created by ${duel.creator.slice(0, 6)}...${duel.creator.slice(-4)}`,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date(duel.startTime * 1000).toISOString(),
       icon: Flag,
       color: 'text-blue-400'
     },
@@ -21,7 +21,7 @@ export const DuelTimeline: React.FC<DuelTimelineProps> = ({ duel }) => {
       type: 'joined',
       title: 'Opponent Joined',
       description: `${duel.opponent.slice(0, 6)}...${duel.opponent.slice(-4)} joined the duel`,
-      timestamp: new Date(duel.startTime * 1000).toISOString(),
+      timestamp: new Date().toISOString(),
       icon: Users,
       color: 'text-green-400'
     }] : []),

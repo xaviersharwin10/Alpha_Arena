@@ -53,7 +53,7 @@ export const DuelCard: React.FC<DuelCardProps> = ({ duel }) => {
           <div className="flex items-center space-x-1">
             <Users className="w-4 h-4 text-blue-400" />
             <span className="text-white">
-              {duel.opponent ? '2/2' : '1/2'}
+                {!duel.opponent || duel.opponent.startsWith('0x000') ? '1/2' : '2/2'}
             </span>
           </div>
         </div>
