@@ -125,6 +125,17 @@ class OneInchService {
       throw new Error(`Failed to get portfolio value: ${error.message}`);
     }
   }
+
+  async getBalances(walletAddress) {
+    try {
+      const response = await this.client.get(`/balance/v1.2/${this.chainId}/balances/${walletAddress}`);
+      return response.data;
+    } catch (error) {
+      console.error('1inch balance error:', error.response?.data || error.message);
+      throw new Error(`Failed to get balances: ${error.response?.data?.description || error.message}`);
+    }
+  }
+
 }
 
 export const oneInchService = new OneInchService();
